@@ -45,10 +45,8 @@ function renderTasks() {
             renderTasks();
         });
 
-        // Botón para editar la tarea
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Editar';
-        editBtn.addEventListener('click', () => {
+        // Permitir edición con doble clic
+        textSpan.addEventListener('dblclick', () => {
             const newText = prompt('Editar tarea:', task.text);
             if (newText !== null && newText.trim() !== '') {
                 tasks[index].text = newText.trim();
@@ -67,7 +65,6 @@ function renderTasks() {
         });
 
         li.appendChild(completeBtn);
-        li.appendChild(editBtn);
         li.appendChild(deleteBtn);
         taskList.appendChild(li);
     });
