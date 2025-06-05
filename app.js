@@ -2,6 +2,7 @@
 const taskInput = document.getElementById('task-input');
 const addTaskButton = document.getElementById('add-task');
 const taskList = document.getElementById('task-list');
+const progressDisplay = document.getElementById('progress');
 
 // Cargar tareas guardadas al iniciar la página
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -28,7 +29,9 @@ function renderTasks() {
     taskList.innerHTML = '';
     tasks.forEach((task, index) => {
         const li = document.createElement('li');
-        li.textContent = task.text;
+        const textSpan = document.createElement('span');
+        textSpan.textContent = task.text;
+        li.appendChild(textSpan);
         if (task.completed) {
             li.classList.add('completed');
         }
@@ -42,9 +45,21 @@ function renderTasks() {
             renderTasks();
         });
 
+        // Botón para editar la tarea
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', () => {
+            const newText = prompt('Editar tarea:', task.text);
+            if (newText !== null && newText.trim() !== '') {
+                tasks[index].text = newText.trim();
+                updateStorage();
+                renderTasks();
+            }
+        });
+
         // Botón para eliminar la tarea
         const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Eliminar';
+        deleteBtn.textContent = '🗑️';
         deleteBtn.addEventListener('click', () => {
             tasks.splice(index, 1);
             updateStorage();
@@ -52,7 +67,11 @@ function renderTasks() {
         });
 
         li.appendChild(completeBtn);
+        li.appendChild(editBtn);
         li.appendChild(deleteBtn);
         taskList.appendChild(li);
     });
+
+    const completed = tasks.filter(task => task.completed).length;
+    progressDisplay.textContent = `Progreso: ${completed} / ${tasks.length}`;
 }
