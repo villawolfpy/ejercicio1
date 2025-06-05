@@ -6,6 +6,9 @@ const pendingList = document.getElementById('pending-list');
 const completedList = document.getElementById('completed-list');
 const progressDisplay = document.getElementById('progress');
 
+// Detectar si estamos en la página de tareas completadas
+const isCompletedPage = !!completedList && !tasksList && !pendingList;
+
 // Cargar tareas guardadas al iniciar la página
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 renderTasks();
@@ -14,7 +17,11 @@ renderTasks();
 addTaskButton.addEventListener('click', () => {
     const text = taskInput.value.trim();
     if (text !== '') {
-        const newTask = { text, completed: false };
+        const newTask = {
+            text,
+            // Si estamos en la página de completadas se agrega como finalizada
+            completed: isCompletedPage
+        };
         tasks.push(newTask);
         updateStorage();
         renderTasks();
