@@ -1,7 +1,8 @@
 // Referencias a elementos del DOM
 const taskInput = document.getElementById('task-input');
 const addTaskButton = document.getElementById('add-task');
-const taskList = document.getElementById('task-list');
+const pendingList = document.getElementById('pending-list');
+const completedList = document.getElementById('completed-list');
 const progressDisplay = document.getElementById('progress');
 
 // Cargar tareas guardadas al iniciar la página
@@ -26,12 +27,26 @@ function updateStorage() {
 }
 
 function renderTasks() {
-    taskList.innerHTML = '';
+    pendingList.innerHTML = '';
+    completedList.innerHTML = '';
+
     tasks.forEach((task, index) => {
         const li = document.createElement('li');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => {
+            tasks[index].completed = checkbox.checked;
+            updateStorage();
+            renderTasks();
+        });
+        li.appendChild(checkbox);
+
         const textSpan = document.createElement('span');
         textSpan.textContent = task.text;
         li.appendChild(textSpan);
+
         if (task.completed) {
             li.classList.add('completed');
         }
@@ -66,7 +81,12 @@ function renderTasks() {
 
         li.appendChild(completeBtn);
         li.appendChild(deleteBtn);
-        taskList.appendChild(li);
+
+        if (task.completed) {
+            completedList.appendChild(li);
+        } else {
+            pendingList.appendChild(li);
+        }
     });
 
     const completed = tasks.filter(task => task.completed).length;

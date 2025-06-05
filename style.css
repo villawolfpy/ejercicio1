@@ -42,13 +42,15 @@ button:hover {
     background-color: #0056b3;
 }
 
-#task-list {
+#pending-list,
+#completed-list {
     list-style: none;
     padding: 0;
     margin-top: 1rem;
 }
 
-#task-list li {
+#pending-list li,
+#completed-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
