@@ -28,9 +28,9 @@ function updateStorage() {
 }
 
 function renderTasks() {
-    tasksList.innerHTML = '';
-    pendingList.innerHTML = '';
-    completedList.innerHTML = '';
+    if (tasksList) tasksList.innerHTML = '';
+    if (pendingList) pendingList.innerHTML = '';
+    if (completedList) completedList.innerHTML = '';
 
     tasks.forEach((task, index) => {
         const createItem = () => {
@@ -94,14 +94,14 @@ function renderTasks() {
         };
 
         // Elemento para la lista de todas las tareas
-        tasksList.appendChild(createItem());
+        if (tasksList) tasksList.appendChild(createItem());
 
         // Elemento para listas según estado
         const statusItem = createItem();
         if (task.completed) {
-            completedList.appendChild(statusItem);
+            if (completedList) completedList.appendChild(statusItem);
         } else {
-            pendingList.appendChild(statusItem);
+            if (pendingList) pendingList.appendChild(statusItem);
         }
     });
 
