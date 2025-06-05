@@ -1,6 +1,7 @@
 // Referencias a elementos del DOM
 const taskInput = document.getElementById('task-input');
 const addTaskButton = document.getElementById('add-task');
+const tasksList = document.getElementById('tasks-list');
 const pendingList = document.getElementById('pending-list');
 const completedList = document.getElementById('completed-list');
 const progressDisplay = document.getElementById('progress');
@@ -27,65 +28,80 @@ function updateStorage() {
 }
 
 function renderTasks() {
+    tasksList.innerHTML = '';
     pendingList.innerHTML = '';
     completedList.innerHTML = '';
 
     tasks.forEach((task, index) => {
-        const li = document.createElement('li');
+        const createItem = () => {
+            const li = document.createElement('li');
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = task.completed;
-        checkbox.addEventListener('change', () => {
-            tasks[index].completed = checkbox.checked;
-            updateStorage();
-            renderTasks();
-        });
-        li.appendChild(checkbox);
-
-        const textSpan = document.createElement('span');
-        textSpan.textContent = task.text;
-        li.appendChild(textSpan);
-
-        if (task.completed) {
-            li.classList.add('completed');
-        }
-
-        // Botón para marcar como completada
-        const completeBtn = document.createElement('button');
-        completeBtn.textContent = 'Completar';
-        completeBtn.addEventListener('click', () => {
-            tasks[index].completed = !tasks[index].completed;
-            updateStorage();
-            renderTasks();
-        });
-
-        // Permitir edición con doble clic
-        textSpan.addEventListener('dblclick', () => {
-            const newText = prompt('Editar tarea:', task.text);
-            if (newText !== null && newText.trim() !== '') {
-                tasks[index].text = newText.trim();
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = task.completed;
+            checkbox.addEventListener('change', () => {
+                tasks[index].completed = checkbox.checked;
                 updateStorage();
                 renderTasks();
+            });
+            li.appendChild(checkbox);
+
+            const textSpan = document.createElement('span');
+            textSpan.textContent = task.text;
+            li.appendChild(textSpan);
+
+            if (task.completed) {
+                li.classList.add('completed');
             }
-        });
 
-        // Botón para eliminar la tarea
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = '🗑️';
-        deleteBtn.addEventListener('click', () => {
-            tasks.splice(index, 1);
-            updateStorage();
-            renderTasks();
-        });
+            // Permitir edición con doble clic en la misma página
+            textSpan.addEventListener('dblclick', () => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = task.text;
+                li.replaceChild(input, textSpan);
+                input.focus();
 
-        li.appendChild(completeBtn);
-        li.appendChild(deleteBtn);
+                const save = () => {
+                    const newText = input.value.trim();
+                    if (newText !== '') {
+                        tasks[index].text = newText;
+                    }
+                    updateStorage();
+                    renderTasks();
+                };
 
+                input.addEventListener('blur', save);
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        save();
+                    } else if (e.key === 'Escape') {
+                        renderTasks();
+                    }
+                });
+            });
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '🗑️';
+            deleteBtn.addEventListener('click', () => {
+                tasks.splice(index, 1);
+                updateStorage();
+                renderTasks();
+            });
+            li.appendChild(deleteBtn);
+
+            return li;
+        };
+
+        // Elemento para la lista de todas las tareas
+        tasksList.appendChild(createItem());
+
+        // Elemento para listas según estado
+        const statusItem = createItem();
         if (task.completed) {
-            completedList.appendChild(li);
+            completedList.appendChild(statusItem);
         } else {
-            pendingList.appendChild(li);
+            pendingList.appendChild(statusItem);
         }
     });
 

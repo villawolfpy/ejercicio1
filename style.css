@@ -42,6 +42,7 @@ button:hover {
     background-color: #0056b3;
 }
 
+#tasks-list,
 #pending-list,
 #completed-list {
     list-style: none;
@@ -49,6 +50,7 @@ button:hover {
     margin-top: 1rem;
 }
 
+#tasks-list li,
 #pending-list li,
 #completed-list li {
     display: flex;
