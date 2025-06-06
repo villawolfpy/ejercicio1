@@ -11,13 +11,17 @@
         <h1>Gestor de Tareas</h1>
     </header>
     <nav>
-        <a href="index.html" class="nav-button">Todas</a>
-        <a href="pendientes.html" class="nav-button">Pendientes</a>
-        <a href="completadas.html" class="nav-button">Completadas</a>
+        <a id="nav-all" href="index.html" class="nav-button">Todas</a>
+        <a id="nav-pending" href="pendientes.html" class="nav-button">Pendientes</a>
+        <a id="nav-completed" href="completadas.html" class="nav-button">Completadas</a>
     </nav>
     <main>
         <input id="task-input" type="text" placeholder="Nueva tarea">
         <button id="add-task">Agregar</button>
+        <input id="search" type="text" placeholder="Buscar...">
+        <button id="export-tasks">Exportar</button>
+        <input type="file" id="import-tasks" accept="application/json" style="display:none">
+        <button id="import-button">Importar</button>
         <h2>Pendientes</h2>
         <ul id="pending-list"></ul>
         <div id="progress"></div>
